@@ -4,7 +4,7 @@
 package expressivo;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
+import java.io.IOException;
 /**
  * Test suite for the Expression implementations: Variable, Number, and BinaryOperation.
  */
@@ -123,6 +123,66 @@ public class ExpressionTest {
 
 	    assertEquals(additionOperation1.hashCode(), additionOperation2.hashCode());
 	    assertNotEquals(additionOperation1.hashCode(), subtractionOperation.hashCode());
+	}
+	// tests for parse method
+	@Test
+	public void testParseFloatingPointNumber() {
+	    Expression parsedExpression;
+	    parsedExpression = ExpressionParser.parse("4.56"); 
+	    assertTrue(parsedExpression instanceof Number); // the parsed expression should be of type Number
+	    assertEquals(4.56, ((Number) parsedExpression).getNumericValue(), 0.0001); 
+	    // Checking if the value is correct
+	}
+	@Test
+	public void testParseSingleVariable() {
+	    try {
+	        Expression parsedExpression = ExpressionParser.parse("x"); 
+	        assertTrue(parsedExpression instanceof Variable); // the parsed expression should be of type Variable
+	        assertEquals("x", ((Variable) parsedExpression).toString()); 
+	        // Checking if the variable name matches the input
+	    } catch (Exception exception) {
+	        fail("Parsing failed: " + exception.getMessage());
+	    }
+	}
+	@Test
+	public void testParseAddition() {
+	        Expression expression = ExpressionParser.parse("a + b");
+	        assertTrue(expression instanceof BinaryOperation);
+	        assertEquals("+", ((BinaryOperation) expression).getOperator());
+	        assertEquals(new Variable("a"), ((BinaryOperation) expression).getLeft());
+	        assertEquals(new Variable("b"), ((BinaryOperation) expression).getRight());
+	}
+	@Test
+	public void testParseMultiplication() {
+	        Expression expression = ExpressionParser.parse("2 * x");
+	        assertTrue(expression instanceof BinaryOperation);
+	        assertEquals("*", ((BinaryOperation) expression).getOperator());
+	        assertEquals(new Number(2.0), ((BinaryOperation) expression).getLeft());
+	        assertEquals(new Variable("x"), ((BinaryOperation) expression).getRight());
+	}
+	@Test
+	public void testDifferentiateNumber() {
+	    Expression number = new Number(5);
+	    assertEquals(new Number(0), number.differentiate("x"));
+	}
+
+	@Test
+	public void testDifferentiateVariable() {
+	    Expression x = new Variable("x");
+	    assertEquals(new Number(1), x.differentiate("x"));
+	    assertEquals(new Number(0), x.differentiate("y"));
+	}
+
+	@Test
+	public void testDifferentiateBinaryOperation() {
+	    Expression expr = new BinaryOperation("*", new Variable("x"), new Variable("x"));
+	    assertEquals(
+	        new BinaryOperation("+",
+	            new BinaryOperation("*", new Number(1), new Variable("x")),
+	            new BinaryOperation("*", new Variable("x"), new Number(1))
+	        ),
+	        expr.differentiate("x")
+	    );
 	}
 }
 

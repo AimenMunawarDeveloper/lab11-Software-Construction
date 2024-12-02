@@ -13,6 +13,12 @@ public class Variable implements Expression {
         this.variableName = variableName;
     }
     /**
+     * If the variable of the expression matches the given variable, the derivative is 1.Otherwise, the derivative is 0, as the variable does not affect the expression.
+     */
+    public Expression differentiate(String variable) {
+        return this.variableName.equals(variable) ? new Number(1) : new Number(0);
+    }
+    /**
      * Converts the variable to a string.It returns the name of the variable.
      */
     @Override

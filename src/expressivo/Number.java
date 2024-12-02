@@ -12,6 +12,12 @@ public class Number implements Expression {
     public Number(double numericValue) {
         this.numericValue = numericValue;
     }
+    public double getNumericValue() {
+        return numericValue;
+    }
+    public Expression differentiate(String variable) {
+        return new Number(0);  // If this variable is the one we are differentiating with respect to, return 1
+    }
     /**
      * Converts the number to a string and return the string representation of the number.
      */

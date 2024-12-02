@@ -2,7 +2,7 @@
  * Redistribution of original or derived work requires permission of course staff.
  */
 package expressivo;
-
+import java.io.IOException;
 /**
  * An immutable data type representing a polynomial expression of:
  *   + and *
@@ -18,17 +18,23 @@ public interface Expression {
     
     // Datatype definition
     //   TODO
-    
-    /**
+	 /**
      * Parse an expression.
      * @param input expression to parse, as defined in the PS3 handout.
      * @return expression AST for the input
      * @throws IllegalArgumentException if the expression is invalid
      */
-    public static Expression parse(String input) {
-        throw new RuntimeException("unimplemented");
-    }
-    
+	public static Expression parse(String input) throws IOException {
+		 return ExpressionParser.parse(input);
+	}
+	/**
+	 * Computes the derivative of this expression with respect to the given variable.
+	 *
+	 * @param variable the variable with respect to which differentiation is performed
+	 * @return the differentiated expression
+	 * @throws IllegalArgumentException if the variable is not part of the expression
+	 */
+	Expression differentiate(String variable);
     /**
      * @return a parsable representation of this expression, such that
      * for all e:Expression, e.equals(Expression.parse(e.toString())).
